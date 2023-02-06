@@ -1,0 +1,84 @@
+<html>
+   <head>
+      <title>jQuery Google CDN</title>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="crossorigin="anonymous"></script>
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            
+          $.ajax({
+            type: "GET",
+            url: "https://api.nasa.gov/neo/rest/v1/feed?start_date=2015-09-07&end_date=2015-09-08&api_key=XTzeMqMUJ4iMHuEObHTZdn3S0F4YOHPSJel6gx3G",
+            success: function(data) {
+                console.log("get data",data);
+                mydata = data.near_earth_objects
+              var table = $("<table><tr><th>Nasa Data</th></tr>");
+                $.each(mydata, function(index, item) {
+                console.log("iii",item)
+                table.append("<tr><td>Absolute Magnitude:</td><td>" + item[0].absolute_magnitude_h+ "</td></tr>");
+                // table.append("<tr><td>Absolute Magnitude:</td><td>" + item[0].id+ "</td></tr>"); 
+                $.each(item, function(index, subitem) {
+                console.log("subitem",subitem)
+                // table.append("<tr><td>Absolute Magnitude:</td><td>" + subitem.absolute_magnitude_h+ "</td></tr>");
+                // table.append("<tr><td>Absolute Magnitude:</td><td>" + item[0].id+ "</td></tr>");  
+                $.each(subitem.close_approach_data, function(index, sub) {
+                console.log("sss",sub)
+                table.append("<tr><td>close approach date:</td><td>" + sub.close_approach_date+ "</td></tr>");
+                // table.append("<tr><td>Absolute Magnitude:</td><td>" + item[0].id+ "</td></tr>");             
+              });            
+              });  
+                      
+              });
+            
+              $("#message").html(table);
+            }
+          });
+        });
+        $.ajax({
+            type: "GET",
+            url: "https://api.nasa.gov/neo/rest/v1/neo/3542519?api_key=XTzeMqMUJ4iMHuEObHTZdn3S0F4YOHPSJel6gx3G",
+            success: function(data) {
+                console.log("neo lookup",data);
+                url = data.nasa_jpl_url
+                alert(url);
+                diameter = data.estimated_diameter.feet;
+              var table = $("<table><tr><th>Neo Lookup Data</th></tr>");
+                $.each(diameter, function(index, item) {
+                console.log("iii",item)
+                table.append("<tr><td>Estimated diameter:</td><td>" + item+ "</td></tr>");
+                // table.append("<tr><td>Absolute Magnitude:</td><td>" + item[0].id+ "</td></tr>"); 
+                                  
+              });
+            
+              $("#neo").html(table);
+            }
+          });
+
+          $.ajax({
+            type: "GET",
+            url: "https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=XTzeMqMUJ4iMHuEObHTZdn3S0F4YOHPSJel6gx3G",
+            success: function(data) {
+                console.log("browser",data);
+                page = data.page
+              
+              console.log("paggee",page)
+              var table = $("<table><tr><th>Browser Data</th></tr>");
+              
+                table.append("<tr><td>Total elements:</td><td>" + page.total_elements+ "</td></tr>");
+                table.append("<tr><td>Total pages:</td><td>" + page.total_pages+ "</td></tr>");
+              $("#browser").html(table);
+            }
+          });
+      </script>
+  
+   </head>
+   <body>
+    <div class="row">
+    <div class="col-4" id="message">
+    </div>
+    <div class="col-4" id="neo"></div>
+    <div class="col-4" id="browser"></div>
+   </body>
+</html>
